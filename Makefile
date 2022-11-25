@@ -404,9 +404,10 @@ OSBI_END=189024
 # partition addreses for icicle kit
 UBOOT_START=2048
 UBOOT_END=23248
-LINUX_START=24096
-LINUX_END=193120
-ROOT_START=195168
+LINUX_START=24576
+LINUX_END=352255
+ROOT_START=352256
+VFAT_SIZE=327680
 
 .PHONY: format-icicle-image
 format-icicle-image: $(fit) $(uboot_s_scr)
