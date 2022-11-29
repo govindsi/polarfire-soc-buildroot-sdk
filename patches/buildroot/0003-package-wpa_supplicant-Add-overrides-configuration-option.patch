@@ -1,0 +1,58 @@
+From 0b8581d9f33201ccab7bb8d29795fdbb62834e32 Mon Sep 17 00:00:00 2001
+From: Mika Joenpera <mika.joenpera@unikie.com>
+Date: Tue, 12 Apr 2022 08:44:59 +0300
+Subject: [PATCH] Add overrides configuration possibility
+
+Overrides configration possibility enabled through
+wpa_supplicant configuration file.
+
+Signed-off-by: Mika Joenpera <mika.joenpera@unikie.com>
+---
+ package/wpa_supplicant/Config.in         |  7 +++++++
+ package/wpa_supplicant/wpa_supplicant.mk | 12 ++++++++++++
+ 2 files changed, 19 insertions(+)
+
+diff --git a/package/wpa_supplicant/Config.in b/package/wpa_supplicant/Config.in
+index 8f095cdf2d..ef2557b8b2 100644
+--- a/package/wpa_supplicant/Config.in
++++ b/package/wpa_supplicant/Config.in
+@@ -84,6 +84,13 @@ config BR2_PACKAGE_WPA_SUPPLICANT_MESH_NETWORKING
+ 	  Enable support for open and secured mesh networking
+ 	  (IEEE 802.11s)
+ 
++config BR2_PACKAGE_WPA_SUPPLICANT_OVERRIDES
++	bool "Enable HT/VHT/HE overrides"
++	help
++	  Enable wpa_supplicant overrides for HT, VHT and HE (disable
++	  HT/HT40, mask MCS rates, etc.) in wpa_supplicant
++	  configuration file.
++
+ config BR2_PACKAGE_WPA_SUPPLICANT_AUTOSCAN
+ 	bool "Enable autoscan"
+ 	help
+diff --git a/package/wpa_supplicant/wpa_supplicant.mk b/package/wpa_supplicant/wpa_supplicant.mk
+index 3c0b0c1dfc..d857b32b19 100644
+--- a/package/wpa_supplicant/wpa_supplicant.mk
++++ b/package/wpa_supplicant/wpa_supplicant.mk
+@@ -110,6 +110,18 @@ else
+ WPA_SUPPLICANT_CONFIG_DISABLE += CONFIG_MESH
+ endif
+ 
++ifeq ($(BR2_PACKAGE_WPA_SUPPLICANT_OVERRIDES),y)
++WPA_SUPPLICANT_CONFIG_ENABLE += \
++	CONFIG_HT_OVERRIDES \
++	CONFIG_VHT_OVERRIDES \
++	CONFIG_HE_OVERRIDES
++else
++WPA_SUPPLICANT_CONFIG_DISABLE += \
++	CONFIG_HT_OVERRIDES \
++	CONFIG_VHT_OVERRIDES \
++	CONFIG_HE_OVERRIDES
++endif
++
+ ifeq ($(BR2_PACKAGE_WPA_SUPPLICANT_AUTOSCAN),y)
+ WPA_SUPPLICANT_CONFIG_ENABLE += \
+ 	CONFIG_AUTOSCAN_EXPONENTIAL \
+-- 
+2.25.1
+
